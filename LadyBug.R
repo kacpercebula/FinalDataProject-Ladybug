@@ -51,6 +51,7 @@ dfSpeciesCount <- clean_lb_data %>%
   count(scientificName)%>%
   rename('count' = 'n')
 
+#intro plot
 plSpeciesCount<-ggplot(dfSpeciesCount,
                          aes(scientificName,count)) +
   geom_bar(stat = "identity", fill = "red", color = "black") +  
@@ -63,20 +64,23 @@ plSpeciesCount + theme + labs(y = "Count of Ladybugs", x = "Ladybug Species")
 #Is there a proportional difference in the number of species 
   #found in certain areas (mowed grass, agriculture, industrial, etc) between Illinois and Iowa?
 
+#Quick rename cleaning
+#clean_lb_data[clean_lb_data == 'Lp-PR-5'] <- 'LP-PR'
+
 #data frame for q1
 dfSpeciesCountStateArea <- clean_lb_data %>%
   dplyr::group_by(stateProvince, plot)%>%
   rename('area' = 'plot')
 dfSpeciesCountStateArea$area <- strtrim(dfSpeciesCountStateArea$area, 5)
+dfSpeciesCountStateArea <- subset(dfSpeciesCountStateArea, area != 'Lp-PR')
 dfSpeciesCountStateArea <- dfSpeciesCountStateArea %>%
   count(area)%>%
   rename('ladyBugCount' = 'n')
-dfSpeciesCountStateArea <- subset(dfSpeciesCountStateArea, area != 'Lp-PR')
 
 #graph for q1
 plSpeciesCountStateArea<-ggplot(dfSpeciesCountStateArea,
                          aes(area,ladyBugCount, fill = stateProvince)) +
-  geom_bar(stat = "identity", position = 'dodge') # + geom_text(aes(label = signif(countSpecies)), nudge_y = 3)
+  geom_bar(stat = "identity", position = 'dodge')
 plSpeciesCountStateArea + labs(y = "Count of Ladybugs", x = "Area Plot", fill = "State")
 ###q1 done
 
@@ -97,16 +101,12 @@ plLadyBugDates + theme + labs(y = "Ladybug Species", x = "Date Collected")
 
 ###q2 done
 
-#Questions 3:
-#Is the distribution of the type of Ladybugs collected different for each Collector?
 
-#df for q3
+###df for q3 & q4
 dfCollector<- clean_lb_data %>%
-  dplyr::select(collector, scientificName)
-  #count(collector, scientificName)
-  #distinct() - used to do name changes
+  dplyr::select(collector, scientificName, plot)
 
-#cleaning for q3
+#cleaning for q3 & q4
 #J.Hughes name change
 dfCollector[dfCollector == 'J Hughes'] <- 'J. Hughes'
 dfCollector[dfCollector == 'J. Hughees'] <- 'J. Hughes'
@@ -138,14 +138,53 @@ dfCollector[dfCollector == 'V.Cervantes'] <- 'V. Cervantes'
 dfCollector[dfCollector == 'Veronica Cervantes'] <- 'V. Cervantes'
 dfCollector[dfCollector == 'Veronica Cervatnes'] <- 'V. Cervantes'
 
+#Single data name change
+dfCollector[dfCollector == 'Lp-PR-5'] <- 'LP-PR'
+
+#strip string for just simple area
+dfCollector$plot <- strtrim(dfCollector$plot, 5)
+
+
+#Question 3:
+#Is the distribution of the type of Ladybugs collected different for each Collector?
+
 #df mutate
-dfCollector<- dfCollector %>%
+dfCollectorSpecies<- dfCollector %>%
   count(collector, scientificName)%>%
   rename('count' = 'n')
 
 #plot for q3
-plCollector <- ggplot(dfCollector, aes(x = collector, y = count, fill = scientificName)) +
+plCollector <- ggplot(dfCollectorSpecies, aes(x = collector, y = count, fill = scientificName)) +
   geom_bar(stat = "identity", position = "dodge")
 plCollector + labs(y = "Ladybug Count", x = "Name of Collector", fill = "Ladybug Species")
 
 ###q3 done
+
+#Questions 4:
+#Is the distribution of the area the Ladybugs were found in different for each Collector?
+
+#df for q4
+dfCollectorArea <- dfCollector %>%
+  count(collector, plot) %>%
+  rename('count' = 'n')
+
+#plot for q4
+plCollector <- ggplot(dfCollectorArea, aes(x = collector, y = count, fill = plot)) +
+  geom_bar(stat = "identity", position = "dodge")
+plCollector + labs(y = "Area Frequency", x = "Name of Collector", fill = "Area")
+
+###q4 done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
