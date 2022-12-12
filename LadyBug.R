@@ -6,7 +6,7 @@ library(ggplot2)
 
 rm(list = ls())
 
-setwd("~/DATA-331/FinalProject/Project-Insect-Carnivore-main/data")
+setwd("~/DATA-331/FinalDataProject-Ladybug/data")
 
 #made data frames that contain all the ORIGINAL data
 summarized_lb_data <- read_excel('Ladybug Data.xlsx', .name_repair = "universal")
