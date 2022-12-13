@@ -5,8 +5,6 @@
 An in-depth paragraph about your project and overview of use.
 In this project, we took on a two data sets that contained information/data about ladybugs and run an analysis on them. One of that is the raw data of everything for ladybugs (Scan Ladybug Data.csv) while the other is a more summarized version with other variables of data (Ladybug Data.xlsx). We looked at the data (found points of interest that we wanted to analyze) and made questions to answer about the data. This then included cleaning the data into one working data frame. We would then use this dataframe and run analysis tools to answer the questions with dataframes that have key values to make visuals. Every question was successfully answered.  
 
-## Getting Started
-
 ### Dependencies
 
 * RStudio with readxl, dplyr, and ggplot2 libraries installed.
