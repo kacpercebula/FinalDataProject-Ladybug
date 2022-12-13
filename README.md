@@ -1,31 +1,31 @@
 # FinalDataProject-Ladybug
 
-Simple overview of use/purpose.
-
 ## Description
 
 An in-depth paragraph about your project and overview of use.
+In this project, we took on a two data sets that contained information/data about ladybugs and run an analysis on them. One of that is the raw data of everything for ladybugs (Scan Ladybug Data.csv) while the other is a more summarized version with other variables of data (Ladybug Data.xlsx). We looked at the data (found points of interest that we wanted to analyze) and made questions to answer about the data. This then included cleaning the data into one working data frame. We would then use this dataframe and run analysis tools to answer the questions with dataframes that have key values to make visuals. Every question was successfully answered.  
 
 ## Getting Started
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* RStudio with readxl, dplyr, and ggplot2 libraries installed.
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* Download all the files from github and make sure it is all in one file.
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
+* Open RStudio
+* Click "Open an existing project"
+* Select the LadyBug.R
+* Set the working directory in the beginning of the code
+* Run the program
 
 ## Help
 
-Any advise for common problems or issues.
+Make sure to set working directory properly and have the necessary libraries installed.
 
 ## Authors
 
