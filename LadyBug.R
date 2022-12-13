@@ -1,11 +1,10 @@
 library(readxl)
 library(dplyr)
-library(tidyverse)
-library(lubridate)
 library(ggplot2)
 
 rm(list = ls())
 
+#Set your working directory
 setwd("~/DATA-331/FinalDataProject-Ladybug/data")
 
 #made data frames that contain all the ORIGINAL data
@@ -14,9 +13,7 @@ all_lb_data <- read.csv("Scan LadyBug Data.csv")
 
 #made a temporary data frame with important variables from all_lb_data that I will use for analysis
 temp_lb_data <- all_lb_data %>%
-  dplyr::select(id, catalogNumber, kingdom, phylum, class, order, family, scientificName, genus, 
-         specificEpithet, year, stateProvince, county, dateIdentified)
-
+  dplyr::select(id, catalogNumber, kingdom, scientificName, genus, year, stateProvince, county)
 
 #Cleaning all the data in temp_lb_data
 #removing null values, empty values, renaming, and overall minor changes.
@@ -54,18 +51,15 @@ dfSpeciesCount <- clean_lb_data %>%
 #intro plot
 plSpeciesCount<-ggplot(dfSpeciesCount,
                          aes(scientificName,count)) +
-  geom_bar(stat = "identity", fill = "red", color = "black") +  
+  geom_bar(stat = "identity", fill = "lavender", color = "black") +  
   geom_text(aes(label = signif(count)), nudge_y = 4) 
-theme <- theme(axis.text.x = element_text(face = "bold", color = "black", size = 5, angle = 25))
-plSpeciesCount + theme + labs(y = "Count of Ladybugs", x = "Ladybug Species")
+theme <- theme(axis.text.x = element_text(size = 5, angle = 25))
+plSpeciesCount + theme + labs(y = "Frequency", x = "Ladybug Species") + ggtitle("Ladybug Species Count")
 
 
 #Question 1: 
-#Is there a proportional difference in the number of species 
-  #found in certain areas (mowed grass, agriculture, industrial, etc) between Illinois and Iowa?
-
-#Quick rename cleaning
-#clean_lb_data[clean_lb_data == 'Lp-PR-5'] <- 'LP-PR'
+#Is there a proportional difference in the number of species found in 
+  #certain areas between Illinois and Iowa?
 
 #data frame for q1
 dfSpeciesCountStateArea <- clean_lb_data %>%
@@ -80,8 +74,8 @@ dfSpeciesCountStateArea <- dfSpeciesCountStateArea %>%
 #graph for q1
 plSpeciesCountStateArea<-ggplot(dfSpeciesCountStateArea,
                          aes(area,ladyBugCount, fill = stateProvince)) +
-  geom_bar(stat = "identity", position = 'dodge')
-plSpeciesCountStateArea + labs(y = "Count of Ladybugs", x = "Area Plot", fill = "State")
+  geom_bar(stat = "identity", position = 'dodge', color = "black")
+plSpeciesCountStateArea + labs(y = "Ladybug Count", x = "Area", fill = "State") + ggtitle("Area vs. Ladybug Count")
 ###q1 done
 
 #Question 2:
@@ -90,14 +84,15 @@ plSpeciesCountStateArea + labs(y = "Count of Ladybugs", x = "Area Plot", fill = 
 
 #data frame for q2
 dfLadyBugDates <- clean_lb_data %>%
-  dplyr::select(date, scientificName)
+  dplyr::select(date, scientificName)%>%
+  count(scientificName, date)%>%
+  rename("count" = "n")
 
 #graph for q1
 plLadyBugDates <- ggplot(dfLadyBugDates, aes(x=date, y=scientificName)) +
- geom_point(aes(color=scientificName), show.legend = FALSE)
+ geom_point(aes(color=scientificName, size = count), show.legend = FALSE)
 theme <- theme(axis.text.y = element_text(face = "bold", color = "black"), legend.position = "none")
-plLadyBugDates + theme + labs(y = "Ladybug Species", x = "Date Collected")
-
+plLadyBugDates + theme + labs(y = "Ladybug Species", x = "Date Collected") + ggtitle("Date Collected of Ladybug Species")
 
 ###q2 done
 
@@ -156,7 +151,7 @@ dfCollectorSpecies<- dfCollector %>%
 #plot for q3
 plCollector <- ggplot(dfCollectorSpecies, aes(x = collector, y = count, fill = scientificName)) +
   geom_bar(stat = "identity", position = "dodge")
-plCollector + labs(y = "Ladybug Count", x = "Name of Collector", fill = "Ladybug Species")
+plCollector + labs(y = "Ladybug Count", x = "Name of Collector", fill = "Ladybug Species") + ggtitle("Collector vs. Ladybug Count")
 
 ###q3 done
 
@@ -171,20 +166,9 @@ dfCollectorArea <- dfCollector %>%
 #plot for q4
 plCollector <- ggplot(dfCollectorArea, aes(x = collector, y = count, fill = plot)) +
   geom_bar(stat = "identity", position = "dodge")
-plCollector + labs(y = "Area Frequency", x = "Name of Collector", fill = "Area")
+plCollector + labs(y = "Area Count", x = "Name of Collector", fill = "Area") + ggtitle("Collector vs. Area Count")
 
 ###q4 done
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#T-test:
+t.test(dfSpeciesCount$count, mu = mean(dfSpeciesCount$count), alternative = "less")
